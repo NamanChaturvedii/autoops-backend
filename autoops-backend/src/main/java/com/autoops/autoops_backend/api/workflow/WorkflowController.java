@@ -79,6 +79,40 @@ public class WorkflowController {
 
     }
 
+    @PostMapping("/{workflowId}/trigger")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR')")
+    public void triggerWorkflow(
+            @PathVariable UUID workflowId,
+            Authentication authentication
+    ) {
+        // 1. Verify workflow exists
+        WorkflowEntity workflow = workflowRepository.findById(workflowId)
+                .orElseThrow(() -> new RuntimeException("Workflow not found"));
+
+        // 2. Create execution entry
+        WorkflowExecutionEntity execution = new WorkflowExecutionEntity();
+        execution.setId(UUID.randomUUID());
+        execution.setWorkflowId(workflowId);
+        execution.setStatus(ExecutionStatus.PENDING);
+        execution.setStartedAt(Instant.now());
+
+        executionRepository.save(execution);
+
+        // 3. Audit
+        auditService.log(
+                authentication.getName(),
+                "TRIGGER_WORKFLOW",
+                workflow.getName()
+        );
+
+        // 4. Call n8n (internal)
+        n8nClient.triggerWorkflow(
+                workflowId.toString(),
+                execution.getId().toString()
+        );
+    }
+
+
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR','ROLE_VIEWER')")
