@@ -25,7 +25,7 @@ public class MetricsController {
 
 
     @GetMapping("/executions/summary")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR')")
     public Map<String , Object> executionSummary (){
         return Map.of(
                 "success",executionRepository.countByStatus(ExecutionStatus.SUCCESS),

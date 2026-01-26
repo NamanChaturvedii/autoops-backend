@@ -51,6 +51,8 @@ public class WorkflowController {
         workflow.setCreatedAt(Instant.now());
         workflow.setUpdatedAt(Instant.now());
 
+
+
         WorkflowEntity saved = workflowRepository.save(workflow);
 
         auditService.log(
@@ -117,7 +119,10 @@ public class WorkflowController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR','ROLE_VIEWER')")
     public List<WorkflowEntity> listWorkflows(Authentication authentication) {
-        return workflowRepository.findByOwnerUserId(authentication.getName());
+        return workflowRepository.findAll();
     }
+
+
+
 
 }

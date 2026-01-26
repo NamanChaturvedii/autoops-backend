@@ -29,7 +29,7 @@ public class JwtTokenService {
 
         return Jwts.builder()
                 .setSubject(userId)
-                .addClaims(Map.of("role",role))
+                .addClaims(Map.of("role",String.valueOf(role)))
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
