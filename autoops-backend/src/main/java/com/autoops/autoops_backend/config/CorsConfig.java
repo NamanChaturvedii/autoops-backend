@@ -15,13 +15,24 @@ public class CorsConfig {
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8081"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE","PATCH", "OPTIONS"));
+
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://192.168.*:*",
+                "http://autoops-frontend:*",
+                "https://autoops-frontend.onrender.com"
+        ));
+
+        config.setAllowedMethods(
+                List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS")
+        );
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
 
         return source;

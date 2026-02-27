@@ -25,7 +25,7 @@ public class MetricsController {
 
 
     @GetMapping("/executions/summary")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR','ROLE_VIEWER')")
     public Map<String , Object> executionSummary (){
         return Map.of(
                 "success",executionRepository.countByStatus(ExecutionStatus.SUCCESS),
@@ -34,7 +34,7 @@ public class MetricsController {
     }
 
     @GetMapping("/workflows/{workflowId}/executions/count")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_OPERATOR','ROLE_VIEWER')")
     public  long workFlowExecutionCount(
             @PathVariable UUID workflowId
             ){
